@@ -74,7 +74,7 @@
         card.classList.add('list__item');
 
         let img = document.createElement('img');
-        img.src = `./img/user0${imgIndex}.png`
+        img.src = `https://i.pravatar.cc/50${imgIndex}`
         img.classList.add('list__photo')
 
         let nameParagraph = document.createElement('p');
@@ -94,9 +94,8 @@
     }
 
     function Update() {
-        let imgIndex = 1;
         for (i in clients) {
-            imgIndex === 3 ? imgIndex = 1 : imgIndex++;
+            let imgIndex = i;
             createItem(clients[i].name, clients[i].telefone, imgIndex);
         }
     }
