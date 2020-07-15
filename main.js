@@ -1,10 +1,12 @@
-(function Main(){
+(function Main() {
     var clients = [];
+    const $list = document.querySelector('#list');
+    let $listItem = document.getElementsByTagName('li');
+    const $searchInput = document.querySelector('#input');
 
-    async function FetchCliente()
-    {
-        clients = [
-            {
+
+    async function FetchCliente() {
+        clients = [{
                 name: "Kauan Pereira Rocha",
                 telefone: "(81) 9479-5548"
             },
@@ -67,22 +69,68 @@
         ]
     }
 
-    function Update()
-    {
-        var $list = document.getElementById('list');
-        var aux = "";
-        for(var i = 0; i < clients.length; i++)
-        {
-            aux += `<li>${clients[i].name}</li>`;
-        }
-        $list.innerHTML = aux;
+    function createItem(clientName, clientTelefone, imgIndex) {
+        let card = document.createElement('li');
+        card.classList.add('list__item');
+
+        let img = document.createElement('img');
+        img.src = `./img/user0${imgIndex}.png`
+        img.classList.add('list__photo')
+
+        let nameParagraph = document.createElement('p');
+        nameParagraph.classList.add('list__paragraph');
+        let name = document.createTextNode(clientName);
+
+        let telefoneParagraph = document.createElement('p');
+        telefoneParagraph.classList.add('list__telefone');
+        let telefone = document.createTextNode(clientTelefone);
+
+        $list.appendChild(card)
+        card.appendChild(img);
+        nameParagraph.appendChild(name);
+        telefoneParagraph.appendChild(telefone);
+        card.appendChild(nameParagraph);
+        card.appendChild(telefoneParagraph);
     }
 
-    async function Start()
-    {
+    function Update() {
+        let imgIndex = 1;
+        for (i in clients) {
+            imgIndex === 3 ? imgIndex = 1 : imgIndex++;
+            createItem(clients[i].name, clients[i].telefone, imgIndex);
+        }
+    }
+
+    function clearFilter() {
+        for (i in clients) {
+            $listItem[i].style.display = "";
+        }
+    }
+
+    function padronizeSearch(word) {
+        return word.trim().toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, '')
+    }
+
+    function filter(inputedWord) {
+        if (inputedWord !== "") {
+            for (let i = 0; i < clients.length; i++) {
+                padronizeSearch(clients[i].name).indexOf(inputedWord) > -1 ? $listItem[i].style.display = "" : $listItem[i].style.display = "none";
+            }
+        } else {
+            clearFilter();
+        }
+    }
+
+    $searchInput.addEventListener('keyup', () => {
+        filter(padronizeSearch($searchInput.value));
+    })
+
+    async function Start() {
         await FetchCliente();
         Update();
     }
+
+
 
     Start();
 
